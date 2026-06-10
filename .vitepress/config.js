@@ -1,4 +1,7 @@
 export default {
+  // 👇 就是加了下面这一行！告诉系统你的 GitHub 仓库名字叫什么
+  base: '/Archive-KnowledgeBase/', 
+  
   title: "档案法规标准知识库",
   description: "档案法规与知识检索数据库",
   themeConfig: {
@@ -22,12 +25,9 @@ export default {
       {
         text: '📖 法律法规',
         items: [
-          // 💡 这里我放了一个占位示例，请确保你有一个 法律/中华人民共和国档案法.md 文件
-          // 💡 如果还没有，可以先把下面这一行删掉，或者把 link 改为你现有的文件名
           { text: '中华人民共和国档案法', link: '/法律/中华人民共和国档案法' }
         ]
-      }, // 👈 刚才就是漏掉了这个逗号！
-
+      },
       {
          text: '📖 标准',
          items: [
