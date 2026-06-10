@@ -1,12 +1,26 @@
 import fs from 'fs'
 import path from 'path'
+import { fileURLToPath } from 'url'
 
-// 💡 这是一个自动读取文件夹内所有 .md 文件的魔法函数
+// 获取当前文件所在目录的绝对路径
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
 function getSidebarItems(dirName) {
-  const dirPath = path.resolve(__dirname, `../${dirName}`)
-  if (!fs.existsSync(dirPath)) return []
+  // 核心改进：显式定位到 docs 根目录，防止路径偏移
+  // 假设你的 md 文件在项目根目录下的 '法律' 或 '标准' 文件夹内
+  const dirPath = path.join(__dirname, '..', dirName)
   
-  return fs.readdirSync(dirPath)
+  console.log(`[DEBUG] 正在扫描路径: ${dirPath}`)
+  
+  if (!fs.existsSync(dirPath)) {
+    console.error(`[ERROR] 目录不存在: ${dirPath}`)
+    return []
+  }
+  
+  const files = fs.readdirSync(dirPath)
+  console.log(`[DEBUG] 该目录下找到的文件:`, files)
+  
+  return files
     .filter(file => file.endsWith('.md') && file.toLowerCase() !== 'readme.md')
     .map(file => {
       const name = file.replace('.md', '')
@@ -22,7 +36,6 @@ export default {
   title: "档案法规标准知识库",
   description: "档案法规与知识检索数据库",
   themeConfig: {
-    // 1. 开启本地全文检索框
     search: {
       provider: 'local',
       options: {
@@ -36,16 +49,14 @@ export default {
         }
       }
     },
-
-    // 2. 🤖 全自动侧边栏配置（再也不用手动改这里了！）
     sidebar: [
       {
         text: '📖 法律法规',
-        items: getSidebarItems('法律') // 自动去抓“法律”文件夹里的所有文件
+        items: getSidebarItems('法律')
       },
       {
          text: '📖 标准',
-         items: getSidebarItems('标准') // 自动去抓“标准”文件夹里的所有文件
+         items: getSidebarItems('标准')
       }
     ]
   }
